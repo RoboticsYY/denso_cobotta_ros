@@ -19,6 +19,8 @@
   <arg name="max_safe_path_cost" default="1"/>
   <arg name="jiggle_fraction" default="0.05" />
   <arg name="publish_monitored_planning_scene" default="true"/>
+  <arg name="joint_source" value="/joint_states" if="$(arg fake_execution)"/>
+  <arg name="joint_source" value="/cobotta/joint_states" unless="$(arg fake_execution)"/>
 
   <!-- Planning Functionality -->
   <include ns="move_group" file="$(find denso_cobotta_moveit_config)/launch/planning_pipeline.launch.xml">
@@ -40,7 +42,7 @@
 
   <!-- Start the actual move_group node/action server -->
   <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group" respawn="false" output="screen" 
-	args="joint_states:=/cobotta/joint_states $(arg command_args)">
+	args="joint_states:=$(arg joint_source) $(arg command_args)">
     <!-- Set the display variable, in case OpenGL code is used internally -->
     <env name="DISPLAY" value="$(optenv DISPLAY :0)" />
 
@@ -58,7 +60,8 @@
   <!-- Run the joint_state_publisher for listening joint_state topic. -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <param name="publish_frequency" type="double" value="125.0" />
-    <rosparam param="source_list">[/cobotta/joint_states]</rosparam>
+    <rosparam param="source_list" if="$(arg fake_execution)">[move_group/fake_controller_joint_states]</rosparam>
+    <rosparam param="source_list" unless="$(arg fake_execution)">[/cobotta/joint_states]</rosparam>
   </node>
 
 </launch>
