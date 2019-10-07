@@ -1,10 +1,10 @@
 moveit_setup_assistant_config:
   URDF:
     package: denso_cobotta_descriptions
-    relative_path: cobotta_description/cobotta.urdf
+    relative_path: cobotta_description/cobotta.urdf.xacro
     xacro_args: "--inorder "
   SRDF:
-    relative_path: config/cobotta.srdf
+    relative_path: config/cobotta.srdf.xacro
   CONFIG:
     author_name: ToshitakaSuzuki
     author_email: toshitaka.suzuki@denso-wave.co.jp
